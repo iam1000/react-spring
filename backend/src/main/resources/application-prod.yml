@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    # Supabase PostgreSQL configuration template for production
+    url: jdbc:postgresql://${PROD_DB_HOST}:${PROD_DB_PORT:5432}/${PROD_DB_NAME:postgres}
+    username: ${PROD_DB_USER}
+    password: ${PROD_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate # Use validate or none for production
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: ${PROD_JWT_SECRET_KEY}
+  expiration_time: 86400000

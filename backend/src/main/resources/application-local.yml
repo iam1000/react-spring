@@ -1,0 +1,19 @@
+spring:
+  datasource:
+    # Supabase PostgreSQL configuration 
+    url: jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres
+    username: postgres.nzxneawiwkedbgmshmuy
+    password: H7BEMK0war1cU8H2
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+jwt:
+  secret: ${JWT_SECRET_KEY:vDf/L8M+hZ1N8RkXG9sWcQmK3oA6pB4yUjV2eT5xY7w=}
+  expiration_time: 86400000 # 24 hours in ms

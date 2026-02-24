@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- 로그 파일 저장 경로 및 파일명 기본 설정 (backend 디렉토리 내부) -->
+    <property name="LOG_PATH" value="./logs"/>
+    <property name="LOG_FILE_NAME" value="backend"/>
+
+    <!-- 1. 콘솔(Terminal) 출력 패턴 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%thread] %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 2. 매일매일 날짜별로 누적(Rolling)되는 일반 로그 파일 출력 -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_PATH}/${LOG_FILE_NAME}.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- 일(Day) 단위로 파일명 날짜 백업 생성 -->
+            <fileNamePattern>${LOG_PATH}/${LOG_FILE_NAME}.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- 로그 최대 보관 주기 (30일) -->
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- 3. 치명적인 로그(ERROR)만 따로 빼서 수집하는 장애 추적 전용 파일 -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 필터: ERROR 레벨이 아니면(Mismatch) 버림(DENY) -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <file>${LOG_PATH}/error.log</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/error.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>60</maxHistory>
+        </rollingPolicy>
+    </appender>
+
+    <!-- [개발/로컬 환경] 로컬 프로필에서는 개발 편의를 위해 DEBUG 레벨 상세 점검 허용 -->
+    <springProfile name="local">
+        <!-- 우리가 짠 코드 영역 하위는 DEBUG 레벨까지 다 노출 -->
+        <logger name="com.example.backend" level="DEBUG"/>
+        
+        <!-- 나머지는 INFO 기본 -->
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+    <!-- [운영/배포 환경] 불필요한 IO 소모 방지를 위해 전체 로그 레벨을 INFO로 제한 -->
+    <springProfile name="prod">
+        <logger name="com.example.backend" level="INFO"/>
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+            <appender-ref ref="ERROR_FILE"/>
+        </root>
+    </springProfile>
+
+</configuration>

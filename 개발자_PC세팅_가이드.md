@@ -25,9 +25,29 @@ Spring Boot 3.x 코어를 사용하는 본 백엔드 소스는 **반드시 Java 
 기존 PC에 구버전(Java 8 등)이 메인으로 깔려있더라도 걱정하지 마시고 17버전을 병렬로 추가 설치해야 합니다.
 
 ### 2.1 Java 17 다운로드 및 실행
+
+#### Windows 환경
 아래 두 링크 중 하나를 선택해 `.msi` 설치 파일을 다운로드하고 실행합니다.
 *   👉 **[Amazon Corretto 17 다운로드 (Windows x64)](https://corretto.aws/downloads/latest/amazon-corretto-17-x64-windows-jdk.msi)**
 *   👉 [Eclipse Temurin 17 다운로드 (Windows x64)](https://api.adoptium.net/v3/installer/latest/17/ga/windows/x64/jdk/hotspot/normal/eclipse?project=jdk)
+
+#### Mac 환경
+Mac 환경에서는 패키지 관리자인 Homebrew를 이용한 설치를 가장 권장합니다. 터미널을 열고 아래 명령어를 순서대로 실행하세요.
+
+1. Homebrew로 Eclipse Temurin 17 설치:
+   ```bash
+   brew install --cask temurin@17
+   ```
+2. `JAVA_HOME` 환경 변수 설정 (zsh 기준):
+   ```bash
+   echo 'export JAVA_HOME=$(/usr/libexec/java_home -v 17)' >> ~/.zshrc
+   source ~/.zshrc
+   ```
+3. 정상 세팅 확인:
+   ```bash
+   java -version
+   echo $JAVA_HOME
+   ```
 
 ### 2.2 설치 시 필수 클릭 주의사항 (환경 변수 자동 등록)
 설치 화면(Custom Setup)으로 진입했을 때, **`Set JAVA_HOME environment variable`** 항목 옆의 아이콘이 `X(붉은 버튼)`로 막혀 있을 수 있습니다.
